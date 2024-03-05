@@ -9,26 +9,23 @@ import React, { useState } from "react";
 const Login = () => {
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
-
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
     const handleLoginButton = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            const response = await fetch("http://localhost:8080/login", {
+            // @ts-ignore
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ user, password })
             });
-            if (response != null) {
-                if (response.ok) {
-                    console.log("Inicio de sesión exitoso");
-                    //Some code to redirect to launcher panel
-                } else {
-                    console.log("Error al iniciar sesion.");
-                }
+            if (response.ok) {
+                console.log("Inicio de sesión exitoso");
+                //Some code to redirect to launcher panel
             } else {
-                console.log("Valor NULL de response.");
+                console.log("Error al iniciar sesion.");
             }
         } catch (error) {
             console.log("Error en la petición: ", error);
@@ -45,7 +42,8 @@ const Login = () => {
                         label="Usuario"
                         variant="outlined"
                         className="w-full"
-                        onChange={(e) => {setUser(e.target.value);console.log(user)}}
+                        required={true}
+                        onChange={(e) => setUser(e.target.value)}
                     />
                     <TextField
                         id="password"
@@ -53,7 +51,7 @@ const Login = () => {
                         type="password"
                         variant="outlined"
                         className="w-full"
-                        onChange={(e) => {setPassword(e.target.value);console.log(password)}}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                     <Button
                         onClick={handleLoginButton}
